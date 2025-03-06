@@ -1,0 +1,48 @@
+# Set compiler variables
+CXX = g++  # Use g++ for C++ files
+
+# Compiler flags
+BASE_CFLAGS = -Wall -Werror -g -std=c++17 
+CFLAGS += $(BASE_CFLAGS)
+CXXFLAGS = $(CFLAGS)  # Use the same flags for C++ files
+
+# Object files variable that contains a list of the object files that will be built
+OBJS = main.o data.o operations.o shop.o pokemud/pokemon.o pokemud/ui.o pokemud/move.o pokemud/json11.o pokemud/battle.o pokemud/load_pson.o pokemud/team.o muddydriver/muddy_driver.o muddydriver/bfs_muddy_driver.o
+
+# Default target all runs the compilation for main and test
+all: main.bin
+
+# Main program target
+main.bin: $(OBJS)
+	$(CXX) $(CFLAGS) -o main.bin $(OBJS) pokemud/gym.o
+
+# Generic rule for building C object files
+%.o: %.c
+	$(CXX) $(CFLAGS) -c $< -o $@
+
+# Specific rule for building operations.o with g++
+
+# Generic rule for building C++ object files
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# Dependencies
+data.o: data.h 
+operations.o: operations.h
+shop.o: shop.h  # Add dependency for shop.o
+pokemud/json11.o: pokemud/json11.hpp
+pokemud/ui.o: pokemud/ui.h
+pokemud/pokemon.o: pokemud/pokemon.h 
+pokemud/move.o: pokemud/move.h 
+pokemud/battle.o: pokemud/battle.h
+pokemud/load_pson.o: pokemud/load_pson.h
+pokemud/team.o: pokemud/team.h
+muddydriver/muddy_driver.o: muddydriver/muddy_driver.h
+muddydriver/bfs_muddy_driver.o: muddydriver/bfs_muddy_driver.h
+
+# Clean target
+clean:
+	rm -f main.bin test.bin *.o pokemud/pokemon.o pokemud/ui.o pokemud/move.o pokemud/battle.o pokemud/load_pson.o pokemud/team.o pokemud/json11.o
+
+# .PHONY will cause the Makefile to consider the targets "all" and "clean" as always out-of-date
+.PHONY: all clean
